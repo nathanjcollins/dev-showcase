@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // NOTE: You probably want to change this to another database later on
+  provider = "sqlite"
+
+  // This value is read from the .env file.
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String
+
+  sites     Site[]
+  siteVotes SiteVote[]
+
+  @@unique([email])
+}
+
+model Site {
+  id      Int     @id @default(autoincrement())
+  name    String
+  url     String
+  repoUrl String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  siteVotes        SiteVote[]
+  siteTechnologies SiteTechnology[]
+}
+
+model SiteVote {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  siteId Int
+  site   Site @relation(fields: [siteId], references: [id])
+
+  voteTypeId Int
+  voteType   VoteType @relation(fields: [voteTypeId], references: [id])
+
+  @@unique([userId, siteId])
+}
+
+model VoteType {
+  id   Int    @id @default(autoincrement())
+  name String
+  icon String
+
+  siteVotes SiteVote[]
+}
+
+model SiteTechnology {
+  id Int @id @default(autoincrement())
+
+  siteId Int
+  site   Site @relation(fields: [siteId], references: [id])
+
+  technologyId Int
+  technology   Technology @relation(fields: [technologyId], references: [id])
+}
+
+model Technology {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  icon String
+
+  siteTechnologies SiteTechnology[]
+}
