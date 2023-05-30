@@ -1,5 +1,5 @@
 <template>
-  <div class="prose p-5 overflow-x-auto">
+  <div class="prose p-5 overflow-x-auto w-full max-w-full">
     <div class="flex gap-2 justify-between">
       <h1>My Sites</h1>
       <SiteModal @created="(e) => me.data.value?.sites.push(e)" />

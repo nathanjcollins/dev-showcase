@@ -1,18 +1,36 @@
 <template>
-  <div class="hero min-h-screen bg-base-200">
+  <div class="hero">
     <div class="hero-content text-center">
-      <div class="max-w-md">
-        <h1 class="text-5xl font-bold">Explore</h1>
+      <div
+        v-if="site && voteTypes"
+        class="max-w-md flex flex-col gap-5"
+      >
+        <h1 class="text-5xl font-bold">
+          {{ site.name }}
+        </h1>
         <p class="py-6">
-          {{ site.data.value?.name ?? '' }}
+          {{ site.user.email }}
         </p>
-        <div v-html="data" />
+        <a
+          :href="site.url"
+          target="_blank"
+        >
+          <img
+            :src="`data:image/jpeg;base64, ${site.preview}`"
+            alt="A preview of the website"
+          />
+        </a>
         <div class="flex flex-col gap-5">
-          <div class="flex gap-2">
+          <div class="flex gap-2 justify-between">
             <button
-              v-for="voteType in voteTypes.data.value"
+              v-for="voteType in voteTypes"
               :key="voteType.id"
-              class="btn btn-primary"
+              class="btn"
+              :class="{
+                'btn-primary': !voteType.voted,
+                'btn-success': voteType.voted
+              }"
+              @click="vote(voteType.id)"
             >
               {{ voteType.name }}
             </button>
@@ -25,6 +43,14 @@
           </button>
         </div>
       </div>
+      <div
+        v-else
+        class="max-w-md flex flex-col gap-5"
+      >
+        <h1 class="text-5xl font-bold">
+          Oh no! There are no more sites to showcase, come back soon!
+        </h1>
+      </div>
     </div>
   </div>
 </template>
@@ -33,14 +59,33 @@
 definePageMeta({ middleware: 'auth' })
 const { $client } = useNuxtApp()
 
-let site = await $client.siteRouter.getNextSite.useQuery()
-const { data } = await useFetch(site.data.value!.url!, {
-  headers: { mode: 'no-cors' }
-})
-console.log(data)
-const voteTypes = await $client.voteRouter.get.useQuery()
+const { data: site, refresh: newSite } =
+  await $client.siteRouter.getNextSite.useQuery()
+
+const { data: voteTypes } = await $client.voteRouter.getAll.useQuery()
 
 const loadNext = async () => {
-  site = await $client.siteRouter.getNextSite.useQuery()
+  await newSite()
+
+  for (let index = 0; index < voteTypes.value!.length; index++) {
+    const element = voteTypes.value![index]
+
+    element.voted = false
+  }
+}
+
+const vote = async (id: number) => {
+  if (!site.value) {
+    return
+  }
+
+  // eslint-disable-next-line arrow-parens
+  const voteType = voteTypes.value!.find((x) => x.id === id)!
+  voteType.voted = !voteType.voted
+
+  await $client.voteRouter.vote.mutate({
+    siteId: site.value.id,
+    voteTypeId: id
+  })
 }
 </script>

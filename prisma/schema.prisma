@@ -28,6 +28,7 @@ model Site {
   name    String
   url     String
   repoUrl String?
+  preview String
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -48,7 +49,7 @@ model SiteVote {
   voteTypeId Int
   voteType   VoteType @relation(fields: [voteTypeId], references: [id])
 
-  @@unique([userId, siteId])
+  @@unique([userId, siteId, voteTypeId])
 }
 
 model VoteType {

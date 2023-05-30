@@ -1,4 +1,5 @@
 /* eslint-disable space-before-function-paren */
+import { launch } from 'puppeteer'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
@@ -8,6 +9,7 @@ export const siteRouter = router({
     const email = ctx.session.user!.email!
 
     const nextSite = await ctx.prisma.site.findFirst({
+      include: { user: true },
       where: {
         NOT: { siteVotes: { some: { user: { email } } }, user: { email } }
       }
@@ -26,11 +28,19 @@ export const siteRouter = router({
     .mutation(async ({ ctx, input }) => {
       const email = ctx.session.user!.email!
 
+      const browser = await launch()
+      const page = await browser.newPage()
+      await page.goto(input.url)
+      await page.setViewport({ width: 1080, height: 1024 })
+      const image = await page.screenshot({ encoding: 'base64' })
+      await browser.close()
+
       const newSite = await ctx.prisma.site.create({
         data: {
           name: input.name,
           url: input.url,
           repoUrl: input.repositoryUrl,
+          preview: image,
           user: {
             connect: {
               email
