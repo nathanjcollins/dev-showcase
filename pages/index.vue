@@ -7,9 +7,10 @@
           A place to show off your portfolios or side projects!
         </p>
         <button
+          id="login"
           class="btn btn-primary"
           @click="
-            signIn('github', { redirect: true, callbackUrl: '/dashboard' })
+            signIn('email', { redirect: true, callbackUrl: '/dashboard' })
           "
         >
           Get Started

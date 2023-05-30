@@ -11,16 +11,20 @@
     "start": "NODE_ENV=production node .output/server/index.mjs"
   },
   "devDependencies": {
+    "@nuxt/test-utils": "^3.5.2",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/tailwindcss": "^6.6.7",
     "@sidebase/nuxt-auth": "0.6.0-alpha.2",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^18.16.4",
+    "cypress": "^12.13.0",
+    "cypress-network-idle": "^1.14.2",
     "eslint": "^8.39.0",
     "nuxt": "^3.4.3",
     "prisma": "^4.13.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
+    "vitest": "^0.31.1",
     "vue-tsc": "^1.6.4"
   },
   "dependencies": {

@@ -3,7 +3,9 @@
     <div class="navbar bg-base-100">
       <div class="navbar-start">
         <a class="btn btn-ghost normal-case text-xl">DevShowcase</a>
-        <span>{{ data?.user?.email }}</span>
+        <span id="welcome-msg">{{
+          data?.user?.email ?? data?.user?.name
+        }}</span>
       </div>
       <div class="navbar-center flex">
         <ul class="menu menu-horizontal px-1 flex gap-2">
@@ -16,8 +18,7 @@
               <a
                 :href="href"
                 :class="{ 'border-purple-400': isActive, border: isActive }"
-                >Dashboard</a
-              >
+              >Dashboard</a>
             </li>
           </NuxtLink>
           <NuxtLink
@@ -29,18 +30,17 @@
               <a
                 :href="href"
                 :class="{ 'border-purple-400': isActive, border: isActive }"
-                >Explore</a
-              >
+              >Explore</a>
             </li>
           </NuxtLink>
         </ul>
       </div>
       <div class="navbar-end">
         <a
+          id="signOut"
           class="btn"
           @click="signOut({ redirect: true, callbackUrl: '/' })"
-          >Sign Out</a
-        >
+        >Sign Out</a>
       </div>
     </div>
     <slot />
