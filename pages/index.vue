@@ -2,7 +2,9 @@
   <div class="hero min-h-screen bg-base-200">
     <div class="hero-content text-center">
       <div class="max-w-md">
-        <h1 class="text-5xl font-bold">Dev Showcase</h1>
+        <h1 class="text-5xl font-bold">
+          Dev Showcase
+        </h1>
         <p class="py-6">
           A place to show off your portfolios or side projects!
         </p>
@@ -10,7 +12,7 @@
           id="login"
           class="btn btn-primary"
           @click="
-            signIn('email', { redirect: true, callbackUrl: '/dashboard' })
+            signIn('github', { redirect: true, callbackUrl: '/dashboard' })
           "
         >
           Get Started
