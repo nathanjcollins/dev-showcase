@@ -2,11 +2,13 @@ import { router } from '../trpc'
 import { siteRouter } from './site'
 import { userRouter } from './user'
 import { voteRouter } from './vote'
+import { technologyRouter } from './technology'
 
 export const appRouter = router({
   userRouter,
   siteRouter,
-  voteRouter
+  voteRouter,
+  technologyRouter
 })
 
 // export type definition of API

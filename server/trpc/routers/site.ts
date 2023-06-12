@@ -9,7 +9,10 @@ export const siteRouter = router({
     const email = ctx.session.user!.email!
 
     const nextSite = await ctx.prisma.site.findFirst({
-      include: { user: true },
+      include: {
+        user: true,
+        siteTechnologies: { include: { technology: true } }
+      },
       where: {
         NOT: { siteVotes: { some: { user: { email } } } },
         OR: { NOT: { user: { email } } }

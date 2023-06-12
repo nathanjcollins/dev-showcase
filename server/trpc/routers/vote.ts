@@ -41,12 +41,12 @@ export const voteRouter = router({
         })
       }
 
-      // if (site.user.email === email) {
-      //   throw new TRPCError({
-      //     message: 'This user cannot vote on this site',
-      //     code: 'UNAUTHORIZED'
-      //   })
-      // }
+      if (site.user.email === email) {
+        throw new TRPCError({
+          message: 'This user cannot vote on this site',
+          code: 'UNAUTHORIZED'
+        })
+      }
 
       const existingVote = site?.siteVotes.find(
         (x) => x.voteTypeId === input.voteTypeId

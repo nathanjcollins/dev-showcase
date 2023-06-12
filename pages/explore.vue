@@ -5,12 +5,19 @@
         v-if="site && voteTypes"
         class="max-w-md flex flex-col gap-5"
       >
-        <h1 class="text-5xl font-bold">
-          {{ site.name }}
-        </h1>
+        <h1 class="text-5xl font-bold">{{ site.name }} {{ site.id }}</h1>
         <p class="py-6">
           {{ site.user.email }}
         </p>
+        <div class="flex mt-5 gap-2">
+          <div
+            v-for="tech in site.siteTechnologies"
+            :key="tech.id"
+            class="badge badge-outline gap-2"
+          >
+            {{ tech.technology.name }}
+          </div>
+        </div>
         <a
           :href="site.url"
           target="_blank"
@@ -59,18 +66,18 @@
 definePageMeta({ middleware: 'auth' })
 const { $client } = useNuxtApp()
 
-const { data: site, refresh: newSite } =
+const { data: site, refresh: getNewSite } =
   await $client.siteRouter.getNextSite.useQuery()
 
 const { data: voteTypes } = await $client.voteRouter.getAll.useQuery()
 
 const loadNext = async () => {
-  await newSite()
+  await getNewSite()
 
   for (let index = 0; index < voteTypes.value!.length; index++) {
-    const element = voteTypes.value![index]
+    const voteType = voteTypes.value![index]
 
-    element.voted = false
+    voteType.voted = false
   }
 }
 

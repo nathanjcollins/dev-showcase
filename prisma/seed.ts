@@ -1,5 +1,5 @@
 /* eslint-disable space-before-function-paren */
-import { PrismaClient, VoteType } from '@prisma/client'
+import { PrismaClient, Technology, VoteType } from '@prisma/client'
 const prisma = new PrismaClient()
 const voteTypes: VoteType[] = [
   {
@@ -18,6 +18,50 @@ const voteTypes: VoteType[] = [
     icon: ''
   }
 ]
+
+const technologies: Technology[] = [
+  {
+    id: 1,
+    name: 'Vue',
+    icon: ''
+  },
+  {
+    id: 2,
+    name: 'React',
+    icon: ''
+  },
+  {
+    id: 3,
+    name: 'Angular',
+    icon: ''
+  },
+  {
+    id: 4,
+    name: 'SolidJS',
+    icon: ''
+  },
+  {
+    id: 5,
+    name: 'Javascript',
+    icon: ''
+  },
+  {
+    id: 6,
+    name: 'Typescript',
+    icon: ''
+  },
+  {
+    id: 7,
+    name: 'PrismaORM',
+    icon: ''
+  },
+  {
+    id: 8,
+    name: 'TailwindCSS',
+    icon: ''
+  }
+]
+
 async function main() {
   for (let index = 0; index < voteTypes.length; index++) {
     const voteType = voteTypes[index]
@@ -32,6 +76,20 @@ async function main() {
       }
     })
   }
+
+  for (let index = 0; index < technologies.length; index++) {
+    const technology = technologies[index]
+
+    await prisma.technology.upsert({
+      where: { id: technology.id },
+      update: {},
+      create: {
+        id: technology.id,
+        name: technology.name,
+        icon: technology.icon
+      }
+    })
+  }
 }
 main()
   .then(async () => {
@@ -40,5 +98,5 @@ main()
   .catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()
-    process.exit(1)
+    // process.exit(1)
   })
